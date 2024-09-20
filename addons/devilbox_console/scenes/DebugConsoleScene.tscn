@@ -1,0 +1,84 @@
+[gd_scene load_steps=7 format=3 uid="uid://g5k3nbw8aehj"]
+
+[ext_resource type="Texture2D" uid="uid://k7uk53cbbcqw" path="res://addons/debug_console/textures/console_bg.png" id="1_bkueb"]
+[ext_resource type="Script" path="res://addons/debug_console/source/DebugConsole.cs" id="2_uwvtb"]
+[ext_resource type="Script" path="res://addons/debug_console/source/ConsoleInput.cs" id="3_f5kq8"]
+[ext_resource type="Texture2D" uid="uid://ct3hrg2ol56yb" path="res://addons/debug_console/textures/caret.png" id="4_thqwd"]
+[ext_resource type="Script" path="res://addons/debug_console/source/Caret.cs" id="5_2cxe3"]
+[ext_resource type="Script" path="res://addons/debug_console/source/CommandProcessor.cs" id="6_3woty"]
+
+[node name="DebugConsole" type="NinePatchRect"]
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.6
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+texture = ExtResource("1_bkueb")
+region_rect = Rect2(0, 0, 512, 512)
+patch_margin_left = 20
+patch_margin_top = 20
+patch_margin_right = 20
+patch_margin_bottom = 20
+script = ExtResource("2_uwvtb")
+ConsoleName = "DebugConsole"
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Wrapper" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HistoryScroll" type="ScrollContainer" parent="MarginContainer/Wrapper"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HistoryContainer" type="VBoxContainer" parent="MarginContainer/Wrapper/HistoryScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ConsoleOutput" type="RichTextLabel" parent="MarginContainer/Wrapper/HistoryScroll/HistoryContainer"]
+layout_mode = 2
+size_flags_vertical = 10
+text = "Welcome to Devilbox Debug Console [color=red]v{{DebugConsole.Version}}[/color]"
+fit_content = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Wrapper"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="Input Label" type="Label" parent="MarginContainer/Wrapper/HBoxContainer"]
+layout_mode = 2
+text = ">"
+
+[node name="ConsoleInput" type="Label" parent="MarginContainer/Wrapper/HBoxContainer" node_paths=PackedStringArray("CaretTexture")]
+layout_mode = 2
+script = ExtResource("3_f5kq8")
+CaretTexture = NodePath("Caret")
+
+[node name="Caret" type="TextureRect" parent="MarginContainer/Wrapper/HBoxContainer/ConsoleInput"]
+texture_filter = 1
+texture_repeat = 2
+layout_mode = 0
+offset_right = 3.0
+offset_bottom = 20.0
+texture = ExtResource("4_thqwd")
+expand_mode = 1
+stretch_mode = 1
+script = ExtResource("5_2cxe3")
+
+[node name="Processor" type="Node" parent="."]
+script = ExtResource("6_3woty")
+ConsoleName = "DebugConsole"
