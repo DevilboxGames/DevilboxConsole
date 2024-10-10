@@ -1,0 +1,158 @@
+[gd_scene load_steps=16 format=3 uid="uid://y8xa1t6j5nk0"]
+
+[ext_resource type="Texture2D" uid="uid://dw6nomlg645c3" path="res://examples/Shared/textures/MessageBox.png" id="1_a1fnd"]
+[ext_resource type="Script" path="res://examples/Shared/scripts/UI/MessageBox.cs" id="1_dxyh5"]
+[ext_resource type="Script" path="res://examples/Shared/scripts/animation/TextWriterAnimation.cs" id="3_muigk"]
+[ext_resource type="Script" path="res://examples/Shared/scripts/animation/ScaleAnimation.cs" id="3_v57cd"]
+[ext_resource type="Script" path="res://examples/Shared/scripts/animation/RotateAnimation.cs" id="4_lyfk7"]
+
+[sub_resource type="Curve" id="Curve_wuf7d"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 2.82679, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="FontVariation" id="FontVariation_n3lr6"]
+
+[sub_resource type="Curve" id="Curve_1k475"]
+min_value = -1.0
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.125, 1), 0.0, 0.0, 0, 0, Vector2(0.25, -0.75), 0.0, 0.0, 0, 0, Vector2(0.375, 0.5), 0.0, 0.0, 0, 0, Vector2(0.5, -0.25), 0.0, 0.0, 0, 0, Vector2(0.625, 0.125), 0.0, 0.0, 0, 0, Vector2(0.75, -0.065), 0.0, 0.0, 0, 0, Vector2(0.875, 0.031), 0.0, 0.0, 0, 0, Vector2(1, 0.0135136), 0.0, 0.0, 0, 0]
+point_count = 9
+
+[sub_resource type="Curve" id="Curve_bwune"]
+max_value = 2.0
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.284946, 0.189189), 1.95496, 1.95496, 0, 0, Vector2(0.491935, 1.44595), 0.0, 0.0, 0, 0, Vector2(0.612903, 0.594595), 3.2173, 3.2173, 0, 0, Vector2(0.733871, 1.28378), 0.0, 0.0, 0, 0, Vector2(0.836021, 0.72973), 0.0, 0.0, 0, 0, Vector2(0.922043, 1.17568), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 8
+
+[sub_resource type="Curve" id="Curve_vdis2"]
+max_value = 2.0
+_data = [Vector2(0, 1), 0.0, -2.14114, 0, 0, Vector2(0.107527, 0), 0.0, 0.0, 0, 0, Vector2(0.505376, 1.44595), 0.0824106, 0.0824106, 0, 0, Vector2(0.736559, 0.851351), -0.128897, -0.128897, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 5
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_hq4ir"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lp5e7"]
+transparency = 2
+alpha_scissor_threshold = 0.6
+alpha_antialiasing_mode = 0
+shading_mode = 0
+albedo_texture = SubResource("ViewportTexture_hq4ir")
+disable_receive_shadows = true
+billboard_keep_scale = true
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_k0y3x"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3ff7a"]
+resource_local_to_scene = true
+transparency = 2
+alpha_scissor_threshold = 0.643
+alpha_antialiasing_mode = 0
+albedo_texture = SubResource("ViewportTexture_k0y3x")
+disable_receive_shadows = true
+billboard_mode = 2
+
+[sub_resource type="QuadMesh" id="QuadMesh_xr81o"]
+material = SubResource("StandardMaterial3D_3ff7a")
+size = Vector2(1, 0.2)
+
+[node name="FloatingMessageBox" type="Node3D" node_paths=PackedStringArray("MessageControl", "MessageBoxBackground", "MessageSubViewport", "MessageBoxMesh", "ShowAnimations", "TypingAnimationNode", "ShakeAnimationNode")]
+transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("1_dxyh5")
+AnimateText = true
+MessageControl = NodePath("SubViewport/CanvasLayer/MarginContainer/NinePatchRect/MarginContainer/RichTextLabel")
+MessageBoxBackground = NodePath("SubViewport/CanvasLayer/MarginContainer/NinePatchRect")
+MessageSubViewport = NodePath("SubViewport")
+MessageBoxMesh = NodePath("TransformOrigin/MeshInstance3D")
+ShowAnimations = [NodePath("TransformOrigin/RotationAnimation"), NodePath("TransformOrigin/ScaleAnimation")]
+TypingAnimationNode = NodePath("SubViewport/CanvasLayer/MarginContainer/NinePatchRect/MarginContainer/RichTextLabel/TypingAnimation")
+ShakeAnimationNode = NodePath("TransformOrigin/ShakeAnimation")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+disable_3d = true
+transparent_bg = true
+size = Vector2i(1024, 128)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="SubViewport"]
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewport/CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="SubViewport/CanvasLayer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_a1fnd")
+region_rect = Rect2(0, 0, 256, 256)
+patch_margin_left = 64
+patch_margin_top = 64
+patch_margin_right = 64
+patch_margin_bottom = 64
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewport/CanvasLayer/MarginContainer/NinePatchRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SubViewport/CanvasLayer/MarginContainer/NinePatchRect/MarginContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/bold_italics_font_size = 32
+theme_override_font_sizes/italics_font_size = 32
+theme_override_font_sizes/mono_font_size = 32
+theme_override_font_sizes/normal_font_size = 32
+theme_override_font_sizes/bold_font_size = 32
+bbcode_enabled = true
+text = "This is a [color=red]Important[/color] message."
+fit_content = true
+
+[node name="TypingAnimation" type="Node" parent="SubViewport/CanvasLayer/MarginContainer/NinePatchRect/MarginContainer/RichTextLabel" node_paths=PackedStringArray("ShakeAnimationNode")]
+script = ExtResource("3_muigk")
+CharactersPerSecond = 15.0
+WritingCurve = SubResource("Curve_wuf7d")
+ShakeOnType = false
+ShakeAnimationNode = NodePath("../../../../../../../TransformOrigin/ShakeAnimation")
+TextFont = SubResource("FontVariation_n3lr6")
+FontSize = 32
+
+[node name="TransformOrigin" type="Node3D" parent="."]
+
+[node name="RotationAnimation" type="Node" parent="TransformOrigin"]
+script = ExtResource("4_lyfk7")
+AutoPlay = true
+Axis = Vector3(0, 0, 1)
+TargetAngle = 45.0
+RotateTime = 0.75
+ScaleCurve = SubResource("Curve_1k475")
+
+[node name="ScaleAnimation" type="Node" parent="TransformOrigin"]
+script = ExtResource("3_v57cd")
+AutoPlay = true
+StartScale = 0.0
+TargetScale = 1.0
+ScaleTime = 0.75
+ScaleCurve = SubResource("Curve_bwune")
+
+[node name="ShakeAnimation" type="Node" parent="TransformOrigin"]
+script = ExtResource("4_lyfk7")
+Axis = Vector3(1, 0, 0)
+StartAngle = 5.0
+TargetAngle = 0.0
+RotateTime = 0.5
+ScaleCurve = SubResource("Curve_vdis2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TransformOrigin"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+material_override = SubResource("StandardMaterial3D_lp5e7")
+mesh = SubResource("QuadMesh_xr81o")
+skeleton = NodePath("../..")

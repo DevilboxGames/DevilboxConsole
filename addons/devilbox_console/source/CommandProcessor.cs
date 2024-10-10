@@ -142,7 +142,7 @@ public partial class CommandProcessor : Node
                 }
 
             }
-            if (currentToken?.TokenType == ConsoleTokenType.Node || currentToken?.TokenType == ConsoleTokenType.NodeProperty)
+            if (currentToken?.TokenType == ConsoleTokenType.Node || currentToken?.TokenType == ConsoleTokenType.NodeProperty || currentToken?.TokenType == ConsoleTokenType.NodeCommand)
             {
                 AutoCompleteNode(currentToken, ref currentCommand, ref caretPosition);
             }
@@ -162,8 +162,13 @@ public partial class CommandProcessor : Node
     private void AutoCompleteCommand(ConsoleToken currentToken, ref string CurrentCommand, ref int CaretPosition)
     {
         var cmds = _commands.OrderBy(c=>c.Key.commandName).Where(
-            c => c.Key.commandName.StartsWith(currentToken.TokenValue, true, CultureInfo.InvariantCulture));
+            c => c.Key.commandName.StartsWith(currentToken.TokenValue, true, CultureInfo.InvariantCulture) && (c.Key.type == null || !c.Value.commandAttribute.InstanceCommand));
 
+        if (!cmds.Any())
+        {
+            return;
+        }
+        
         if (cmds.Count() > 1)
         {
             string commonStart = cmds.Select(c => c.Key.commandName).Aggregate((a,b)=>a.GetCommonStart(b));
@@ -184,10 +189,10 @@ public partial class CommandProcessor : Node
         {
             var cmd = cmds.First();
             CurrentCommand = CurrentCommand.Substring(0, currentToken.TokenLocation) +
-                             cmd.Key.commandName +
+                             cmd.Key.commandName + " " +
                              CurrentCommand.Substring(currentToken.TokenLocation +
                                                       currentToken.TokenValue.Length);
-            CaretPosition = currentToken.TokenLocation + cmd.Key.commandName.Length;
+            CaretPosition = currentToken.TokenLocation + 1 + cmd.Key.commandName.Length;
         }
     }
     private void AutoCompleteResource(ConsoleToken currentToken, ref string CurrentCommand, ref int CaretPosition, string pathPrefix = "", string[] filters = null)
@@ -278,10 +283,26 @@ public partial class CommandProcessor : Node
             pathStart = currentToken.TokenValue.Substring(0, firstDotIndex);
             pathEnd = currentToken.TokenValue.Substring(firstDotIndex + 1);
         }
+        
+        
+        bool autoCompleteNodeCommand = false;
+        if (currentToken.TokenValue.Contains(':'))
+        {
+            autoCompleteNodeCommand = true;
+            int firstColonIndex = currentToken.TokenValue.IndexOf(':');
+            int lastColonIndex = currentToken.TokenValue.LastIndexOf(':');
+            pathStart = currentToken.TokenValue.Substring(0, lastColonIndex);
+            pathEnd = currentToken.TokenValue.Substring(lastColonIndex + 1);
+        }
                                 
-        Node node = GetNode($"/root/{pathStart.Substring(1)}");
 
-        if (autoCompleteProperty)
+        Node node = GetNode($"/root/{pathStart.Substring(1)}");
+        
+        if (autoCompleteNodeCommand)
+        {
+            AutoCompleteNodeCommand(currentToken, node, pathStart, pathEnd, ref CurrentCommand, ref CaretPosition);
+        }
+        else if (autoCompleteProperty)
         {
             AutoCompleteNodeProperty(currentToken, node, pathStart, pathEnd, ref CurrentCommand, ref CaretPosition);
         }
@@ -396,6 +417,63 @@ public partial class CommandProcessor : Node
                                         
             objectType = propertyInfo.MemberType == MemberTypes.Field? (propertyInfo as FieldInfo).FieldType : (propertyInfo as PropertyInfo).PropertyType;
         }
+    }
+
+    private void AutoCompleteNodeCommand(ConsoleToken currentToken, Node node, string nodePath, string nodeCommand, ref string CurrentCommand, ref int CaretPosition)
+    {
+        var splitPath = nodePath.Split('.');
+
+        Type objectType = node.GetType();
+        object currentObject = node;
+        
+        for (int i = 1; i < splitPath.Length; i++)
+        {
+            PropertyInfo propertyInfo = objectType.GetProperty(splitPath[i]);
+            if (propertyInfo != null)
+            {
+                currentObject = propertyInfo.GetValue(currentObject, null);
+                objectType = currentObject.GetType();
+            }
+            else
+            {
+                LogError($"ERROR: {splitPath[i-1]} does not contain a property named {splitPath[i]}, in: {nodePath}");
+                return;
+            }
+        }
+        
+        var cmds = _commands.OrderBy(c=>c.Key.commandName).Where(
+            c => c.Key.commandName.StartsWith(nodeCommand, true, CultureInfo.InvariantCulture) && (c.Key.type != null && c.Key.type.IsAssignableFrom(objectType) && c.Value.commandAttribute.InstanceCommand));
+
+        if (!cmds.Any())
+        {
+            return;
+        }
+        
+        if (cmds.Count() > 1)
+        {
+            string commonStart = cmds.Select(c => c.Key.commandName).Aggregate((a,b)=>a.GetCommonStart(b));
+
+            Log("Possible commands:");
+            foreach (var possibleCommand in cmds)
+            {
+                Log($"\t{possibleCommand.Key.commandName}");
+            }
+            CurrentCommand = CurrentCommand.Substring(0, currentToken.TokenLocation + nodePath.Length) + ":"+
+                             commonStart +
+                             CurrentCommand.Substring(currentToken.TokenLocation +
+                                                      currentToken.TokenValue.Length);
+                                    
+            CaretPosition = currentToken.TokenLocation + nodePath.Length + 1 + commonStart.Length;
+        }
+        else
+        {
+            var cmd = cmds.First();
+            CurrentCommand = CurrentCommand.Substring(0, currentToken.TokenLocation + nodePath.Length) + ":" +
+                             cmd.Key.commandName + " " +
+                             CurrentCommand.Substring(currentToken.TokenLocation + currentToken.TokenValue.Length);
+            CaretPosition = currentToken.TokenLocation + nodePath.Length + 2 + cmd.Key.commandName.Length;
+        }
+        
     }
 
     protected object ConvertParameterType(string input, Type type)
@@ -516,6 +594,12 @@ public partial class CommandProcessor : Node
         if (node == null)
         {
             LogError($"Can not find node at path {nodeCmd[0]}", "Invalid Node Path");
+        }
+
+        if (nodeCmd.Length < 2)
+        {
+            propertyObject = node;
+            return null;
         }
         
         Type nodeType = node.GetType();
@@ -684,7 +768,7 @@ public partial class CommandProcessor : Node
     {
         error.errorReason = "";
         error.errorMessage = "";
-        string commandName = commandToken.TokenValue;
+        string commandName = commandToken.TokenType == ConsoleTokenType.NodeCommand ? commandToken.TokenValue.Split(':').LastOrDefault() :  commandToken.TokenValue;
 
         if (!_commands.Any(c =>
                 (c.Key.type == targetObjectType || c.Key.type.IsAssignableFrom(targetObjectType)) &&
@@ -701,7 +785,7 @@ public partial class CommandProcessor : Node
             (c.Key.type == targetObjectType || c.Key.type.IsAssignableFrom(targetObjectType)) && c.Key.commandName == commandName).Value;
 
         
-        int tokenCount = parameterTokens.Count();
+        int tokenCount = parameterTokens?.Count() ?? 0;
         int parameterCount = cmd.parameterAttributes.Count(p=> /*p.Usage == ConsoleCommandParameterAttribute.ConsoleCommandParameterUsage.Default*/ p.Order >= 0);
         int requiredParameterCount = cmd.parameterAttributes.Count(p => !p.Optional && /*p.Usage == ConsoleCommandParameterAttribute.ConsoleCommandParameterUsage.Default*/ p.Order >= 0);
 
@@ -867,15 +951,18 @@ public partial class CommandProcessor : Node
             case ConsoleTokenType.Node:
                 Node node = GetNode($"/root/{token.TokenValue.Substring(1)}");
                 return returnType != null && returnType.IsInstanceOfType(node) ? Convert.ChangeType(node, returnType) : node;
-                
+
             case ConsoleTokenType.NodeProperty:
-                MemberInfo objectProperty = GetObjectProperty(token.TokenValue, out Node propertyNode, out object propertyObject);
+            {
+                MemberInfo objectProperty =
+                    GetObjectProperty(token.TokenValue, out Node propertyNode, out object propertyObject);
                 PropertyInfo pi = objectProperty as PropertyInfo;
                 FieldInfo fi = objectProperty as FieldInfo;
-                
+
                 if (objectProperty != null && argumentTokens != null && argumentTokens.Length > 0)
                 {
-                    object newValue = ProcessToken(argumentTokens[0], out error, null, null, pi?.PropertyType ?? fi.FieldType, bindingSubstutions);
+                    object newValue = ProcessToken(argumentTokens[0], out error, null, null,
+                        pi?.PropertyType ?? fi.FieldType, bindingSubstutions);
 
                     if (pi != null)
                     {
@@ -885,10 +972,11 @@ public partial class CommandProcessor : Node
                     {
                         fi.SetValue(propertyObject, newValue);
                     }
+
                     return newValue;
                 }
-                
-                if(objectProperty != null)
+
+                if (objectProperty != null)
                 {
                     object propertyValue = pi != null ? pi.GetValue(propertyObject) : fi.GetValue(propertyObject);
                     return returnType != null && returnType.IsInstanceOfType(propertyValue)
@@ -897,10 +985,15 @@ public partial class CommandProcessor : Node
                 }
 
                 break;
-            
+            }
+
             case ConsoleTokenType.NodeCommand:
-                break;
-            
+            {
+                MemberInfo objectProperty =
+                    GetObjectProperty(token.TokenValue, out Node propertyNode, out object propertyObject);
+                return ProcessCommand(token, argumentTokens, out error, propertyObject, propertyObject.GetType(), bindingSubstutions);
+            }
+
             case ConsoleTokenType.CommandCollection:
                 return ProcessCommandCollection(token, out error, targetObject, targetType, bindingSubstutions);
                 

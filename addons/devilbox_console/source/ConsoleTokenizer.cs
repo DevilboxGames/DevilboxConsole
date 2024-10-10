@@ -334,7 +334,7 @@ public static class ConsoleTokenizer
         while (tokenStack.Count > 0)
         {
             var nextToken = tokenStack.Pop();
-            if (token != null && (token.IsValueToken && !string.IsNullOrWhiteSpace(token.TokenValue) || !token.IsValueToken && token.SubTokens.Count > 0) && !nextToken.SubTokens.Contains(token))
+            if (token != null && (token.IsValueToken && !string.IsNullOrWhiteSpace(token.TokenValue) || !token.IsValueToken ) && !nextToken.SubTokens.Contains(token))
             {
                 nextToken.SubTokens.Add(token);
             }

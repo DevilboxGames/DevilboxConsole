@@ -1,0 +1,101 @@
+[gd_scene load_steps=17 format=3 uid="uid://drjxlul30774p"]
+
+[ext_resource type="Texture2D" uid="uid://bjg1xuq8vmc2j" path="res://examples/Shared/textures/floor.png" id="1_f5od4"]
+[ext_resource type="PackedScene" uid="uid://d1qlf4ph18n0w" path="res://examples/Shared/scenes/ExamplePlayer.tscn" id="2_vb2fh"]
+[ext_resource type="PackedScene" uid="uid://btsa32r7ftrte" path="res://examples/01-Commands/scenes/example-hud-01.tscn" id="3_cktj8"]
+[ext_resource type="Script" path="res://examples/Shared/scripts/DialogueSequenceBox.cs" id="4_8bum2"]
+[ext_resource type="Script" path="res://examples/01-Commands/scripts/Example01Commands.cs" id="4_m0v8g"]
+[ext_resource type="PackedScene" uid="uid://c4ps0hhevcjlj" path="res://examples/Shared/scenes/AmmoBox.tscn" id="4_rlqqb"]
+[ext_resource type="PackedScene" uid="uid://dwd4icbphcer3" path="res://examples/Shared/scenes/HealthBox.tscn" id="5_dt1lt"]
+[ext_resource type="PackedScene" uid="uid://y8xa1t6j5nk0" path="res://examples/Shared/scenes/FloatingMessageBox.tscn" id="7_12yaa"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ia4j2"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_h2osu"]
+sky_material = SubResource("ProceduralSkyMaterial_ia4j2")
+
+[sub_resource type="Environment" id="Environment_otx0o"]
+background_mode = 2
+sky = SubResource("Sky_h2osu")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l6cxg"]
+shading_mode = 0
+albedo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_pn22b"]
+material = SubResource("StandardMaterial3D_l6cxg")
+radius = 0.005
+height = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w43p1"]
+albedo_texture = ExtResource("1_f5od4")
+uv1_scale = Vector3(15, 15, 15)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1khbi"]
+material = SubResource("StandardMaterial3D_w43p1")
+size = Vector2(50, 50)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_3c0kp"]
+points = PackedVector3Array(-25, 0, -25, -25, 0, 25, 25, 0, -25, 25, 0, 25)
+
+[node name="01-commands" type="Node3D"]
+
+[node name="Example-hud-01" parent="." instance=ExtResource("3_cktj8")]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.627963, -0.518724, 0.580162, 0, 0.745476, 0.666532, -0.778243, -0.418558, 0.468132, 0, 0, 0)
+light_energy = 2.4
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_otx0o")
+
+[node name="ExamplePlayer" parent="." node_paths=PackedStringArray("Hud", "DialogueSequenceNode") instance=ExtResource("2_vb2fh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.488837, 0, 0.240843)
+Hud = NodePath("../Example-hud-01")
+DialogueSequenceNode = NodePath("DialogueSequences")
+
+[node name="FloatingMessageBox" parent="ExamplePlayer" node_paths=PackedStringArray("ShowAnimations", "DebugCursorNode") instance=ExtResource("7_12yaa")]
+transform = Transform3D(0.813446, 0, -0.58164, 0, 3, 0, 0.58164, 0, 0.813446, 0.824918, 1.26572, -1.4212)
+Message = "This is a [color=red]Important[/color] message.
+
+Watch as it types out. Are you having fun?
+
+Press enter..."
+Size = Vector2(1, 3)
+ShowAnimations = []
+DebugCursorNode = NodePath("MeshInstance3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ExamplePlayer/FloatingMessageBox"]
+transform = Transform3D(0.813446, 0, 0.58164, 0, 0.333333, 0, -0.58164, 0, 0.813446, -0.084753, 0.173381, 0.175442)
+mesh = SubResource("SphereMesh_pn22b")
+skeleton = NodePath("../../DialogueSequences")
+
+[node name="DialogueSequences" type="Node" parent="ExamplePlayer" node_paths=PackedStringArray("MessageBoxNode")]
+script = ExtResource("4_8bum2")
+DialogueSequence = Array[String](["This is a [color=red]interactive dialogue[/color] window.\\nIt is [i][color=green]animated[/color][/i] and supports [u]rich[/u] text.\\nPress enter to continue...", "It supports mutliple messages and will keep animating when the next message is shown... blah blah blah blah blah blah blah blah", "Then it will close when it's done."])
+ProgressActionName = &"Action"
+MessageBoxNode = NodePath("../FloatingMessageBox")
+
+[node name="WorldBody" type="StaticBody3D" parent="."]
+collision_layer = 7
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WorldBody"]
+mesh = SubResource("PlaneMesh_1khbi")
+skeleton = NodePath("../..")
+
+[node name="FloorCollision" type="CollisionShape3D" parent="WorldBody"]
+shape = SubResource("ConvexPolygonShape3D_3c0kp")
+
+[node name="SpawnedItems" type="Node3D" parent="."]
+
+[node name="ExampleCommands" type="Node" parent="." node_paths=PackedStringArray("Player", "SpawnWrapper")]
+script = ExtResource("4_m0v8g")
+HealthPrefab = ExtResource("5_dt1lt")
+AmmoPrefab = ExtResource("4_rlqqb")
+Player = NodePath("../ExamplePlayer")
+SpawnWrapper = NodePath("../SpawnedItems")

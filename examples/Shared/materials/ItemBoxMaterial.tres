@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bbfq2mymmm8cg"]
+
+[ext_resource type="Texture2D" uid="uid://dsag8nrtfymnk" path="res://examples/Shared/textures/ItemBox_AmmoBox.png" id="1_4nnr4"]
+
+[resource]
+resource_name = "ItemBoxMaterial"
+cull_mode = 2
+albedo_texture = ExtResource("1_4nnr4")
+roughness = 0.5

@@ -1,0 +1,56 @@
+[gd_scene load_steps=7 format=3 uid="uid://d1qlf4ph18n0w"]
+
+[ext_resource type="Script" path="res://examples/Shared/scripts/ExamplePlayerController.cs" id="1_6bpia"]
+[ext_resource type="Script" path="res://examples/Shared/scripts/ExamplePlayer.cs" id="1_lr21r"]
+[ext_resource type="Script" path="res://examples/Shared/scripts/FPSMoveController.cs" id="2_pef6i"]
+[ext_resource type="Script" path="res://examples/Shared/scripts/FPSMouseAimController.cs" id="3_sx25b"]
+[ext_resource type="Script" path="res://examples/Shared/scripts/DisableControllerOnConsoleOpen.cs" id="4_lcnc1"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_raa3t"]
+
+[node name="ExamplePlayer" type="CharacterBody3D"]
+collision_layer = 2
+script = ExtResource("1_lr21r")
+Health = 25.0
+Ammo = 25
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_raa3t")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0)
+
+[node name="CameraContainer" type="Node3D" parent="Head"]
+
+[node name="Camera3D" type="Camera3D" parent="Head/CameraContainer"]
+
+[node name="ExamplePlayerController" type="Node" parent="." node_paths=PackedStringArray("MoveController", "MouseAimController", "Character", "ActionCast", "Camera")]
+script = ExtResource("1_6bpia")
+MoveController = NodePath("../FPSMoveController")
+MouseAimController = NodePath("../FPSAimController")
+Character = NodePath("..")
+ActionCast = NodePath("../ActionCast")
+Camera = NodePath("../Head/CameraContainer/Camera3D")
+ActionDistance = 10.0
+
+[node name="FPSMoveController" type="Node" parent="." node_paths=PackedStringArray("Character")]
+script = ExtResource("2_pef6i")
+Character = NodePath("..")
+WalkSpeed = 5.0
+RunSpeed = 7.0
+JumpForce = 7.0
+
+[node name="FPSAimController" type="Node" parent="." node_paths=PackedStringArray("Character", "Head")]
+script = ExtResource("3_sx25b")
+Character = NodePath("..")
+Head = NodePath("../Head")
+DegreesPerUnit = 0.005
+
+[node name="DisableControllerOnShowConsole" type="Node" parent="." node_paths=PackedStringArray("PlayerController")]
+script = ExtResource("4_lcnc1")
+PlayerController = NodePath("../ExamplePlayerController")
+
+[node name="ActionCast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+target_position = Vector3(0, 0, -2)

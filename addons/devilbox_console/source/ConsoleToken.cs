@@ -29,7 +29,7 @@ public class ConsoleToken
     public ConsoleTokenType TokenType { get; set; }
     public int TokenLocation { get; set; }
     
-    public bool IsValueToken => TokenType != ConsoleTokenType.Array && TokenType != ConsoleTokenType.NodeCommand && TokenType != ConsoleTokenType.CommandCollection;
+    public bool IsValueToken => TokenType != ConsoleTokenType.Array && TokenType != ConsoleTokenType.CommandCollection;
     public T GetValue<T>() => (T)GetValue(typeof(T));
 
     public void Reset()

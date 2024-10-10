@@ -26,7 +26,6 @@ public partial class DebugConsole : ConsoleControl
         Hide();
         IsShowing = false;
         base._Ready();
-        
     }
 
     public void ShowConsole()

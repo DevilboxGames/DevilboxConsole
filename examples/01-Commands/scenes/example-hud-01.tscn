@@ -1,0 +1,112 @@
+[gd_scene load_steps=7 format=3 uid="uid://btsa32r7ftrte"]
+
+[ext_resource type="Script" path="res://examples/01-Commands/scripts/ExampleHud01.cs" id="1_6hxsm"]
+[ext_resource type="Texture2D" uid="uid://cfnyf0fxaatu" path="res://examples/Shared/textures/hud_bar_outer.png" id="1_f4yv7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jel6q"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2lavo"]
+bg_color = Color(0.592157, 0, 0, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e501w"]
+bg_color = Color(0, 0.592157, 0, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a5yja"]
+
+[node name="Example-hud-01" type="Node" node_paths=PackedStringArray("HealthBar", "AmmoCount")]
+script = ExtResource("1_6hxsm")
+HealthBar = NodePath("CanvasLayer/HealthBar/ProgressBar")
+AmmoCount = NodePath("CanvasLayer/Ammo/HBoxContainer/AmmoCounter")
+Health = 100.0
+Ammo = 100
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="HealthBar" type="Panel" parent="CanvasLayer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 30.0
+offset_right = -20.0
+offset_bottom = 90.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_jel6q")
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/HealthBar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = -12.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_2lavo")
+theme_override_styles/fill = SubResource("StyleBoxFlat_e501w")
+show_percentage = false
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/HealthBar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+texture = ExtResource("1_f4yv7")
+region_rect = Rect2(0, 0, 256, 128)
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30
+
+[node name="Ammo" type="Panel" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -79.0
+offset_right = 274.0
+offset_bottom = -20.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_a5yja")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Ammo"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AmmoLabel" type="RichTextLabel" parent="CanvasLayer/Ammo/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/normal_font_size = 40
+text = "Ammo:"
+fit_content = true
+scroll_active = false
+
+[node name="AmmoCounter" type="RichTextLabel" parent="CanvasLayer/Ammo/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/normal_font_size = 40
+text = "100"
+fit_content = true
+scroll_active = false

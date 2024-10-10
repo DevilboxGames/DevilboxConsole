@@ -170,7 +170,9 @@ public partial class ConsoleControl : Control
                 }
                 else if (keyEvent.Keycode == Key.Tab)
                 {
-                   CurrentCommand = _commandProcessor.AutoComplete( _currentCommand, ref HistoryIndex);
+                    int caretPosition = CaretPosition;
+                   CurrentCommand = _commandProcessor.AutoComplete( _currentCommand, ref caretPosition);
+                   CaretPosition = caretPosition;
                 }
                 else if(keyEvent.Keycode == Key.Delete && CurrentCommand.Length > 0)
                 {

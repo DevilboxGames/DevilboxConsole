@@ -1,11 +1,11 @@
 [gd_scene load_steps=7 format=3 uid="uid://g5k3nbw8aehj"]
 
-[ext_resource type="Texture2D" uid="uid://k7uk53cbbcqw" path="res://addons/debug_console/textures/console_bg.png" id="1_bkueb"]
-[ext_resource type="Script" path="res://addons/debug_console/source/DebugConsole.cs" id="2_uwvtb"]
-[ext_resource type="Script" path="res://addons/debug_console/source/ConsoleInput.cs" id="3_f5kq8"]
-[ext_resource type="Texture2D" uid="uid://ct3hrg2ol56yb" path="res://addons/debug_console/textures/caret.png" id="4_thqwd"]
-[ext_resource type="Script" path="res://addons/debug_console/source/Caret.cs" id="5_2cxe3"]
-[ext_resource type="Script" path="res://addons/debug_console/source/CommandProcessor.cs" id="6_3woty"]
+[ext_resource type="Texture2D" uid="uid://k7uk53cbbcqw" path="res://addons/devilbox_console/textures/console_bg.png" id="1_bkueb"]
+[ext_resource type="Script" path="res://addons/devilbox_console/source/DebugConsole.cs" id="2_uwvtb"]
+[ext_resource type="Script" path="res://addons/devilbox_console/source/ConsoleInput.cs" id="3_f5kq8"]
+[ext_resource type="Texture2D" uid="uid://ct3hrg2ol56yb" path="res://addons/devilbox_console/textures/caret.png" id="4_thqwd"]
+[ext_resource type="Script" path="res://addons/devilbox_console/source/Caret.cs" id="5_2cxe3"]
+[ext_resource type="Script" path="res://addons/devilbox_console/source/CommandProcessor.cs" id="6_3woty"]
 
 [node name="DebugConsole" type="NinePatchRect"]
 anchors_preset = -1
