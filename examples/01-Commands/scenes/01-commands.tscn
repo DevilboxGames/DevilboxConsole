@@ -55,23 +55,19 @@ shadow_enabled = true
 environment = SubResource("Environment_otx0o")
 
 [node name="ExamplePlayer" parent="." node_paths=PackedStringArray("Hud", "DialogueSequenceNode") instance=ExtResource("2_vb2fh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.488837, 0, 0.240843)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.816714, 0.119122, 0.433588)
 Hud = NodePath("../Example-hud-01")
 DialogueSequenceNode = NodePath("DialogueSequences")
 
 [node name="FloatingMessageBox" parent="ExamplePlayer" node_paths=PackedStringArray("ShowAnimations", "DebugCursorNode") instance=ExtResource("7_12yaa")]
-transform = Transform3D(0.813446, 0, -0.58164, 0, 3, 0, 0.58164, 0, 0.813446, 0.824918, 1.26572, -1.4212)
-Message = "This is a [color=red]Important[/color] message.
-
-Watch as it types out. Are you having fun?
-
-Press enter..."
-Size = Vector2(1, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.75)
+Message = "Some message goes here."
+Size = Vector2(1, 1)
 ShowAnimations = []
 DebugCursorNode = NodePath("MeshInstance3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ExamplePlayer/FloatingMessageBox"]
-transform = Transform3D(0.813446, 0, 0.58164, 0, 0.333333, 0, -0.58164, 0, 0.813446, -0.084753, 0.173381, 0.175442)
+transform = Transform3D(1, 0, 0, 0, 0.333333, 0, 0, 0, 1, -0.084753, 0.173381, 0.175442)
 mesh = SubResource("SphereMesh_pn22b")
 skeleton = NodePath("../../DialogueSequences")
 

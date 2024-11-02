@@ -132,10 +132,24 @@ public partial class TextWriterAnimation : Node, INodeAnimation
 
     public void Restart()
     {
+        Reset();
         IsPlaying = true;
+    }
+
+    public void Reset()
+    {
         _progressTime = 0;
         _progressCharacter = StartingIndex;
         _progressText = Text.Substring(0, _progressCharacter);
+        WriteText(_progressText);
+    }
+
+    public void SkipToEnd()
+    {
+        IsPlaying = false;
+        _progressTime = 0;
+        _progressText = Text;
+        _progressCharacter = Text.Length;
         WriteText(_progressText);
     }
 }

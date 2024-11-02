@@ -82,8 +82,20 @@ public partial class ScaleAnimation : Node, INodeAnimation
 
     public void Restart()
     {
+        Reset();
         IsPlaying = true;
+    }
+
+    public void Reset()
+    {
         _progress = 0;
         SetParentScale(StartScale);
+    }
+
+    public void SkipToEnd()
+    {
+        IsPlaying = false;
+        _progress = ScaleTime;
+        SetParentScale(TargetScale);
     }
 }

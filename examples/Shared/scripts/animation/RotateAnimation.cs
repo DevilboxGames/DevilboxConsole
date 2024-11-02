@@ -84,8 +84,21 @@ public partial class RotateAnimation : Node, INodeAnimation
 
     public void Restart()
     {
+        Reset();
         IsPlaying = true;
+        
+    }
+
+    public void Reset()
+    {
         _progress = 0;
         SetParentRotation(StartAngle);
+    }
+
+    public void SkipToEnd()
+    {
+        _progress = RotateTime;
+        SetParentRotation(TargetAngle);
+        IsPlaying = false;
     }
 }

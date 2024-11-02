@@ -57,8 +57,19 @@ public partial class BobAnimation : Node, INodeAnimation
 
     public void Restart()
     {
+        Reset();
         IsPlaying = true;
+    }
+
+    public void Reset()
+    {
         _parentNode.Position = BobVector * BaseHeight;
         _period = 0;
+    }
+
+    public void SkipToEnd()
+    {
+        IsPlaying = false;
+        Reset();
     }
 }

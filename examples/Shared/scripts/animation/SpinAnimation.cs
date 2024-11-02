@@ -56,4 +56,14 @@ public partial class SpinAnimation : Node, INodeAnimation
         IsPlaying = true;
         _parentNode.Quaternion = new Quaternion(SpinAxis, Mathf.DegToRad(BaseAngle));
     }
+
+    public void Reset()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void SkipToEnd()
+    {
+        throw new System.NotImplementedException();
+    }
 }

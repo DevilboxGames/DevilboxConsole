@@ -7,4 +7,6 @@ public interface INodeAnimation
     void Play();
     void Stop();
     void Restart();
+    void Reset();
+    void SkipToEnd();
 }
