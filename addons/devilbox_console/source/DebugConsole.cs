@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using Godot;
+using RogueDragon.Scripts.Utility;
 
 namespace DevilboxGames.DebugConsole;
 
@@ -24,6 +18,7 @@ public partial class DebugConsole : ConsoleControl
     public override void _Ready()
     {
         Hide();
+        ProcessMode = ProcessModeEnum.Always;
         IsShowing = false;
         base._Ready();
     }
@@ -32,6 +27,8 @@ public partial class DebugConsole : ConsoleControl
     {
         IsShowing = true;
         IsFocused = true;
+        this.TakeInputControl();
+        //GetTree().SetPause(true);
         Show();
         OnShowConsole?.Invoke();
     }
@@ -39,6 +36,8 @@ public partial class DebugConsole : ConsoleControl
     {
         IsShowing = false;
         IsFocused = false;
+        this.ReleaseInputControl();
+        //GetTree().SetPause(false);
         Hide();
         OnHideConsole?.Invoke();
     }

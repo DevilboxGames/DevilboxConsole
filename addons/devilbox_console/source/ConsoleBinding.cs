@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DevilboxGames.DebugConsole;
+﻿namespace DevilboxGames.DebugConsole;
 
 public class ConsoleBinding
 {

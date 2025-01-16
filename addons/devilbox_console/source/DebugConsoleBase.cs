@@ -20,7 +20,7 @@ public partial class DebugConsoleBase : CommandConsole
         }
     }
     public DebugConsole DebugConsole => Console as DebugConsole;
-    protected override string ConsoleScene { get; set; } = "res://addons/debug_console/scenes/DebugConsoleScene.tscn";
+    protected override string ConsoleScene { get; set; } = "res://addons/devilbox_console/scenes/DebugConsoleScene.tscn";
 
     private float _consoleHeight = 1.0f;
     public override void _EnterTree()

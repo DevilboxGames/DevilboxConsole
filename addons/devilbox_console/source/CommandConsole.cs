@@ -25,7 +25,7 @@ public partial class CommandConsole : Node
     [Export]
     public string DefaultOutput { get; set; }
     
-    protected virtual string ConsoleScene { get; set; } = "res://addons/debug_console/scenes/CommandConsoleScene.tscn";
+    protected virtual string ConsoleScene { get; set; } = "res://addons/devilbox_console/scenes/CommandConsoleScene.tscn";
     
     private string _consoleName;
     public override void _EnterTree()

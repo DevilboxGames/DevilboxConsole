@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Godot;
+﻿using Godot;
 
 namespace DevilboxGames.DebugConsole;
 
