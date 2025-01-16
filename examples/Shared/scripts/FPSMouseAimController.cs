@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using DevilboxConsole.examples.Shared.scripts.singletons;
+using Godot;
 
 namespace DevilboxConsole.examples.Shared.scripts;
 
@@ -62,7 +63,7 @@ public partial class FPSMouseAimController : Node
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (!InputEnabled)
+        if (GameStateUtil.PlayerInputState != GameStateUtil.PlayerInputStateMode.Controller)
         {
             return;
         }

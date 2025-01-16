@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using DevilboxConsole.examples.Shared.scripts.singletons;
+using Godot;
 
 namespace DevilboxConsole.examples.Shared.scripts;
 
@@ -38,7 +39,7 @@ public partial class FPSMoveController : Node
 
     public override void _PhysicsProcess(double delta)
     {
-        Vector2 movement = InputEnabled ? Input.GetVector(LeftAction, RightAction, ForwardAction, BackwardAction) : Vector2.Zero;
+        Vector2 movement = GameStateUtil.PlayerInputState == GameStateUtil.PlayerInputStateMode.Controller ? Input.GetVector(LeftAction, RightAction, ForwardAction, BackwardAction) : Vector2.Zero;
         Vector3 direction = (Character.Transform.Basis * new Vector3(movement.X, 0, movement.Y)).Normalized();
         
         Vector3 velocity = Character.Velocity;
@@ -64,7 +65,7 @@ public partial class FPSMoveController : Node
                 velocity.X = Mathf.Lerp(velocity.X, direction.X * WalkSpeed, (float)delta * 7.0f);
                 velocity.Z = Mathf.Lerp(velocity.Z, direction.Z * WalkSpeed, (float)delta * 7.0f);
             }
-            if (Input.IsActionJustPressed(JumpAction))
+            if (GameStateUtil.PlayerInputState == GameStateUtil.PlayerInputStateMode.Controller && Input.IsActionJustPressed(JumpAction))
             {
                 velocity += -GravityDirection * JumpForce;
             }

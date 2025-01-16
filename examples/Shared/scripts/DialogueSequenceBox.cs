@@ -1,4 +1,5 @@
 ﻿using DevilboxConsole.examples.Shared.scripts.hud;
+using DevilboxConsole.examples.Shared.scripts.singletons;
 using Godot;
 using Godot.Collections;
 
@@ -38,11 +39,18 @@ public partial class DialogueSequenceBox : Node
         }
     }
 
-    public override void _UnhandledKeyInput(InputEvent @event)
+    public override void _Input(InputEvent @event)
     {
-        if (@event is InputEventKey eventKey && eventKey.Pressed && eventKey.Keycode == Key.Enter)
+        if ((GameStateUtil.PlayerInputState == GameStateUtil.PlayerInputStateMode.Controller || GameStateUtil.PlayerInputState == GameStateUtil.PlayerInputStateMode.Dialogue) && @event is InputEventKey eventKey && eventKey.Pressed && eventKey.Keycode == Key.Enter)
         {
-            NextMessage();
+            if (MessageBox.TypingAnimation.IsPlaying)
+            {
+                MessageBox.TypingAnimation.SkipToEnd();
+            }
+            else
+            {
+                NextMessage();
+            }
         }
     }
 }

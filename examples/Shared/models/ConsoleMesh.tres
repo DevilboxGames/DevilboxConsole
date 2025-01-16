@@ -1,9 +1,9 @@
 [gd_resource type="ArrayMesh" load_steps=4 format=4 uid="uid://2unkvrikvigp"]
 
-[ext_resource type="Material" uid="uid://dma5vbbdpitqo" path="res://examples/Shared/materials/ConsoleBody.tres" id="1_her22"]
-[ext_resource type="Material" uid="uid://cu123binc68e6" path="res://examples/Shared/materials/ConsoleScreen.tres" id="2_gwtj5"]
+[ext_resource type="Material" uid="uid://dma5vbbdpitqo" path="res://examples/Shared/materials/ConsoleBody.tres" id="1_71nom"]
+[ext_resource type="Material" uid="uid://cu123binc68e6" path="res://examples/Shared/materials/ConsoleScreen.tres" id="2_7tb7q"]
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_rco5s"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_ij6xg"]
 _surfaces = [{
 "aabb": AABB(-0.5, 0, -0.5, 1, 1.61572, 1),
 "format": 34896613377,
@@ -35,7 +35,7 @@ _surfaces = [{
 "format": 34896613399,
 "index_count": 90,
 "index_data": PackedByteArray("AQAeACMAAQAHAB4AEQAIAAsACAAiACAACAARACIADwAmACEADwAMACYADQAKAAQADQAQAAoAAwAGAAAAAwAJAAYABQAnAA4AJwACACUAJwAFAAIAHAAsABkAHAAoACwAGwAhABIAGwAfACEAFQAkABgAFQAmACQAEgAmABUAEgAhACYAGAAfABsAGAAkAB8AGgAvABcAGgAtAC8AFgAqABMAFgAuACoAFAApAB0AFAArACkA"),
-"material": ExtResource("1_her22"),
+"material": ExtResource("1_71nom"),
 "name": "ConsoleBody",
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
@@ -47,7 +47,7 @@ _surfaces = [{
 "format": 34896613399,
 "index_count": 6,
 "index_data": PackedByteArray("AAADAAIAAAABAAMA"),
-"material": ExtResource("2_gwtj5"),
+"material": ExtResource("2_7tb7q"),
 "name": "ConsoleScreen",
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
@@ -55,4 +55,4 @@ _surfaces = [{
 "vertex_data": PackedByteArray("AAD///////8AAAAAAAD////////+/////v8AAAAA////f5vl/3+b5f9/m+X/f5vl")
 }]
 blend_shape_mode = 0
-shadow_mesh = SubResource("ArrayMesh_rco5s")
+shadow_mesh = SubResource("ArrayMesh_ij6xg")

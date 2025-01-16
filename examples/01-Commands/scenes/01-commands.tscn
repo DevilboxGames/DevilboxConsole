@@ -59,15 +59,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.816714, 0.119122, 0.433588
 Hud = NodePath("../Example-hud-01")
 DialogueSequenceNode = NodePath("DialogueSequences")
 
-[node name="FloatingMessageBox" parent="ExamplePlayer" node_paths=PackedStringArray("ShowAnimations", "DebugCursorNode") instance=ExtResource("7_12yaa")]
+[node name="FloatingMessageBox" parent="ExamplePlayer" node_paths=PackedStringArray("ShowAnimations") instance=ExtResource("7_12yaa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.75)
 Message = "Some message goes here."
 Size = Vector2(1, 1)
 ShowAnimations = []
-DebugCursorNode = NodePath("MeshInstance3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ExamplePlayer/FloatingMessageBox"]
 transform = Transform3D(1, 0, 0, 0, 0.333333, 0, 0, 0, 1, -0.084753, 0.173381, 0.175442)
+visible = false
 mesh = SubResource("SphereMesh_pn22b")
 skeleton = NodePath("../../DialogueSequences")
 

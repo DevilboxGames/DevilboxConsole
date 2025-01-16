@@ -27,15 +27,15 @@ max_value = 2.0
 _data = [Vector2(0, 1), 0.0, -2.14114, 0, 0, Vector2(0.107527, 0), 0.0, 0.0, 0, 0, Vector2(0.505376, 1.44595), 0.0824106, 0.0824106, 0, 0, Vector2(0.736559, 0.851351), -0.128897, -0.128897, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 5
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_hq4ir"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_s6s8m"]
 viewport_path = NodePath("SubViewport")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lp5e7"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8vfgi"]
 transparency = 2
 alpha_scissor_threshold = 0.6
 alpha_antialiasing_mode = 0
 shading_mode = 0
-albedo_texture = SubResource("ViewportTexture_hq4ir")
+albedo_texture = SubResource("ViewportTexture_s6s8m")
 disable_receive_shadows = true
 billboard_keep_scale = true
 
@@ -70,7 +70,7 @@ ShakeAnimationNode = NodePath("TransformOrigin/ShakeAnimation")
 [node name="SubViewport" type="SubViewport" parent="."]
 disable_3d = true
 transparent_bg = true
-size = Vector2i(1024, 128)
+size = Vector2i(2048, 128)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="SubViewport"]
 
@@ -153,6 +153,6 @@ ScaleCurve = SubResource("Curve_vdis2")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="TransformOrigin"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
-material_override = SubResource("StandardMaterial3D_lp5e7")
+material_override = SubResource("StandardMaterial3D_8vfgi")
 mesh = SubResource("QuadMesh_xr81o")
 skeleton = NodePath("../..")
